@@ -21,19 +21,11 @@ from services.review_service import (
 )
 
 
-# ==========================================
-# FASTAPI APP
-# ==========================================
-
 app = FastAPI(
     title="ReviewForge AI Service",
     version="1.0.0"
 )
 
-
-# ==========================================
-# HOME ENDPOINT
-# ==========================================
 
 @app.get("/")
 def home():
@@ -44,10 +36,6 @@ def home():
     }
 
 
-# ==========================================
-# REVIEW GITHUB REPOSITORY
-# ==========================================
-
 @app.post("/review/github")
 def review_github_repository(repo_url: str):
 
@@ -55,29 +43,15 @@ def review_github_repository(repo_url: str):
 
     try:
 
-        # ==================================
-        # STEP 1: CLONE REPOSITORY
-        # ==================================
-
         print("\nSTEP 1: Cloning repository...")
 
         repository_path = clone_repository(
             repo_url
         )
 
-
-        # ==================================
-        # GET REPOSITORY NAME
-        # ==================================
-
         repo_name = get_repository_name(
             repo_url
         )
-
-
-        # ==================================
-        # STEP 2: EXTRACT CODE FILES
-        # ==================================
 
         print(
             "STEP 2: Extracting code files..."
@@ -86,11 +60,6 @@ def review_github_repository(repo_url: str):
         code_files = extract_code_files(
             repository_path
         )
-
-
-        # ==================================
-        # NO CODE FILES
-        # ==================================
 
         if not code_files:
 
@@ -117,11 +86,6 @@ def review_github_repository(repo_url: str):
                     "No supported code found"
             }
 
-
-        # ==================================
-        # GET FILE NAMES SAFELY
-        # ==================================
-
         if isinstance(code_files, dict):
 
             file_names = list(
@@ -138,10 +102,8 @@ def review_github_repository(repo_url: str):
 
                     file_path = (
                         file_data.get("file_path")
-                        or
-                        file_data.get("path")
-                        or
-                        "unknown"
+                        or file_data.get("path")
+                        or "unknown"
                     )
 
                     file_names.append(
@@ -152,11 +114,6 @@ def review_github_repository(repo_url: str):
 
             file_names = []
 
-
-        # ==================================
-        # STEP 3: CHUNK CODE
-        # ==================================
-
         print(
             "STEP 3: Chunking code..."
         )
@@ -164,11 +121,6 @@ def review_github_repository(repo_url: str):
         chunks = chunk_code_files(
             code_files
         )
-
-
-        # ==================================
-        # NO CHUNKS
-        # ==================================
 
         if not chunks:
 
@@ -202,11 +154,6 @@ def review_github_repository(repo_url: str):
                     "No code chunks generated"
             }
 
-
-        # ==================================
-        # STEP 4: STORE CHUNKS
-        # ==================================
-
         print(
             "STEP 4: Storing chunks in ChromaDB..."
         )
@@ -215,11 +162,6 @@ def review_github_repository(repo_url: str):
             repo_name,
             chunks
         )
-
-
-        # ==================================
-        # STEP 5: RETRIEVE RELEVANT CHUNKS
-        # ==================================
 
         print(
             "STEP 5: Retrieving relevant chunks..."
@@ -239,11 +181,6 @@ def review_github_repository(repo_url: str):
             )
         )
 
-
-        # ==================================
-        # STEP 6: GENERATE REVIEW
-        # ==================================
-
         print(
             "STEP 6: Generating code review..."
         )
@@ -251,11 +188,6 @@ def review_github_repository(repo_url: str):
         review_result = review_with_mistral(
             relevant_chunks
         )
-
-
-        # ==================================
-        # SUCCESS RESPONSE
-        # ==================================
 
         return {
 
@@ -302,11 +234,6 @@ def review_github_repository(repo_url: str):
                 )
         }
 
-
-    # ======================================
-    # ERROR
-    # ======================================
-
     except Exception as error:
 
         print(
@@ -317,11 +244,6 @@ def review_github_repository(repo_url: str):
             status_code=500,
             detail=str(error)
         )
-
-
-    # ======================================
-    # CLEANUP
-    # ======================================
 
     finally:
 

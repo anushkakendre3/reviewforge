@@ -5,16 +5,12 @@ from dotenv import load_dotenv
 from mistralai.client import Mistral
 
 
-# ==========================================
 # LOAD ENVIRONMENT VARIABLES
-# ==========================================
 
 load_dotenv()
 
 
-# ==========================================
 # MISTRAL CONFIGURATION
-# ==========================================
 
 MISTRAL_API_KEY = os.getenv(
     "MISTRAL_API_KEY"
@@ -27,9 +23,7 @@ MODEL_NAME = os.getenv(
 )
 
 
-# ==========================================
 # LANGUAGE HELPER
-# ==========================================
 
 def get_language_from_path(
     file_path
@@ -92,18 +86,14 @@ def get_language_from_path(
     return "Unknown"
 
 
-# ==========================================
 # NORMALIZE CHUNK
-# ==========================================
 
 def normalize_chunk(
     chunk,
     index=0
 ):
 
-    # ======================================
     # STRING CHUNK
-    # ======================================
 
     if isinstance(
         chunk,
@@ -126,9 +116,7 @@ def normalize_chunk(
         }
 
 
-    # ======================================
     # INVALID CHUNK
-    # ======================================
 
     if not isinstance(
         chunk,
@@ -151,9 +139,7 @@ def normalize_chunk(
         }
 
 
-    # ======================================
     # GET METADATA SAFELY
-    # ======================================
 
     metadata = chunk.get(
         "metadata",
@@ -169,9 +155,7 @@ def normalize_chunk(
         metadata = {}
 
 
-    # ======================================
     # GET FILE PATH
-    # ======================================
 
     file_path = (
 
@@ -197,9 +181,7 @@ def normalize_chunk(
     )
 
 
-    # ======================================
     # GET LANGUAGE
-    # ======================================
 
     language = (
 
@@ -221,9 +203,7 @@ def normalize_chunk(
     )
 
 
-    # ======================================
     # GET CONTENT
-    # ======================================
 
     content = chunk.get(
         "content",
@@ -255,9 +235,7 @@ def normalize_chunk(
     }
 
 
-# ==========================================
 # RULE-BASED CODE ANALYSIS
-# ==========================================
 
 def analyze_code_chunk(
     content,
@@ -274,9 +252,7 @@ def analyze_code_chunk(
     )
 
 
-    # ======================================
     # SECURITY
-    # ======================================
 
     if "eval(" in content:
 
@@ -320,9 +296,7 @@ def analyze_code_chunk(
         )
 
 
-    # ======================================
     # ERROR HANDLING
-    # ======================================
 
     if "except exception" in content_lower:
 
@@ -350,9 +324,7 @@ def analyze_code_chunk(
         )
 
 
-    # ======================================
     # DEBUGGING
-    # ======================================
 
     if "print(" in content:
 
@@ -380,9 +352,7 @@ def analyze_code_chunk(
         )
 
 
-    # ======================================
     # EMPTY FILE
-    # ======================================
 
     if not content.strip():
 
@@ -391,9 +361,7 @@ def analyze_code_chunk(
         )
 
 
-    # ======================================
     # NO ISSUES
-    # ======================================
 
     if not issues:
 
@@ -403,9 +371,7 @@ def analyze_code_chunk(
         )
 
 
-    # ======================================
     # DEFAULT SUGGESTIONS
-    # ======================================
 
     if not suggestions:
 
@@ -423,18 +389,14 @@ def analyze_code_chunk(
     return issues, suggestions
 
 
-# ==========================================
 # INTELLIGENT FALLBACK REVIEW
-# ==========================================
 
 def fallback_review(
     relevant_chunks,
     reason="AI service unavailable"
 ):
 
-    # ======================================
     # NORMALIZE INPUT FIRST
-    # ======================================
 
     normalized_chunks = []
 
@@ -471,9 +433,7 @@ def fallback_review(
     )
 
 
-    # ======================================
     # GROUP CHUNKS BY FILE
-    # ======================================
 
     files = {}
 
@@ -520,10 +480,7 @@ def fallback_review(
 
         files[file_path]["chunks"] += 1
 
-
-    # ======================================
     # FILE REVIEWS
-    # ======================================
 
     all_issues = []
 
@@ -533,9 +490,7 @@ def fallback_review(
     )
 
 
-    # ======================================
     # NO FILES
-    # ======================================
 
     if not files:
 
@@ -545,9 +500,7 @@ def fallback_review(
         )
 
 
-    # ======================================
     # ANALYZE FILES
-    # ======================================
 
     for file_path, file_data in (
         files.items()
@@ -637,9 +590,7 @@ def fallback_review(
         )
 
 
-    # ======================================
     # OVERALL ANALYSIS
-    # ======================================
 
     review += (
         "## Overall Analysis\n\n"
@@ -664,9 +615,7 @@ def fallback_review(
         )
 
 
-    # ======================================
     # RECOMMENDATIONS
-    # ======================================
 
     review += (
 
@@ -688,9 +637,7 @@ def fallback_review(
     )
 
 
-    # ======================================
     # ANALYSIS INFORMATION
-    # ======================================
 
     review += (
 
@@ -717,17 +664,15 @@ def fallback_review(
     return review
 
 
-# ==========================================
 # GENERATE AI CODE REVIEW
-# ==========================================
 
 def review_with_mistral(
     relevant_chunks
 ):
 
-    # ======================================
+
     # CHECK CODE CHUNKS
-    # ======================================
+
 
     if not relevant_chunks:
 
@@ -749,9 +694,7 @@ def review_with_mistral(
         }
 
 
-    # ======================================
     # NORMALIZE ALL CHUNKS
-    # ======================================
 
     normalized_chunks = []
 
@@ -770,9 +713,7 @@ def review_with_mistral(
         )
 
 
-    # ======================================
     # CHECK API KEY
-    # ======================================
 
     if not MISTRAL_API_KEY:
 
@@ -805,9 +746,7 @@ def review_with_mistral(
         }
 
 
-    # ======================================
     # PREPARE CODE CONTEXT
-    # ======================================
 
     code_context = ""
 
@@ -850,9 +789,7 @@ CODE CHUNK {index}:
 """
 
 
-    # ======================================
     # CREATE PROMPT
-    # ======================================
 
     prompt = f"""
 
@@ -908,12 +845,7 @@ Repository Code:
 
 {code_context}
 
-"""
 
-
-    # ======================================
-    # CALL MISTRAL
-    # ======================================
 
     try:
 
@@ -959,9 +891,7 @@ Repository Code:
         )
 
 
-        # ==================================
         # EXTRACT REVIEW
-        # ==================================
 
         review = (
             response
@@ -999,9 +929,7 @@ Repository Code:
         }
 
 
-    # ======================================
     # ERROR HANDLING
-    # ======================================
 
     except Exception as error:
 
@@ -1016,9 +944,7 @@ Repository Code:
         )
 
 
-        # ==================================
         # RATE LIMIT
-        # ==================================
 
         if (
 
@@ -1066,9 +992,7 @@ Repository Code:
             }
 
 
-        # ==================================
         # OTHER AI ERRORS
-        # ==================================
 
         print(
             "Using local fallback review."

@@ -41,18 +41,13 @@ import java.util.Map;
 @RequestMapping("/api")
 public class AiReviewController {
 
-
-    // ==========================================
     // AI SERVICE URL
-    // ==========================================
 
     private static final String AI_SERVICE_URL =
             "http://127.0.0.1:8000";
 
 
-    // ==========================================
     // SERVICES
-    // ==========================================
 
     private final JwtService jwtService;
 
@@ -62,24 +57,10 @@ public class AiReviewController {
 
     private final ReviewService reviewService;
 
-
-    // ==========================================
-    // HTTP CLIENT
-    // ==========================================
-
     private final HttpClient httpClient;
-
-
-    // ==========================================
-    // JSON MAPPER
-    // ==========================================
 
     private final ObjectMapper objectMapper;
 
-
-    // ==========================================
-    // CONSTRUCTOR
-    // ==========================================
 
     public AiReviewController(
 
@@ -115,9 +96,7 @@ public class AiReviewController {
     }
 
 
-    // ==========================================
     // REVIEW REPOSITORY
-    // ==========================================
 
     @PostMapping("/review")
     public ResponseEntity<?> reviewRepository(
@@ -130,23 +109,12 @@ public class AiReviewController {
 
     ) {
 
-
-        System.out.println(
-                "\n================================="
-        );
-
         System.out.println(
                 "AI REVIEW REQUEST RECEIVED"
         );
 
-        System.out.println(
-                "================================="
-        );
 
-
-        // ======================================
         // VALIDATE REQUEST
-        // ======================================
 
         if (
 
@@ -178,9 +146,7 @@ public class AiReviewController {
                         .trim();
 
 
-        // ======================================
         // VALIDATE GITHUB URL
-        // ======================================
 
         if (
 
@@ -203,9 +169,7 @@ public class AiReviewController {
         try {
 
 
-            // ==================================
             // CLEAN JWT TOKEN
-            // ==================================
 
             String token =
                     authHeader
@@ -223,9 +187,7 @@ public class AiReviewController {
                             .trim();
 
 
-            // ==================================
             // EXTRACT EMAIL FROM JWT
-            // ==================================
 
             String email =
                     jwtService.extractEmail(
@@ -239,9 +201,7 @@ public class AiReviewController {
             );
 
 
-            // ==================================
             // FIND USER
-            // ==================================
 
             User user =
                     userService.findByEmail(
@@ -269,9 +229,7 @@ public class AiReviewController {
             );
 
 
-            // ==================================
             // EXTRACT REPOSITORY NAME
-            // ==================================
 
             String repoName =
                     extractRepositoryName(
@@ -285,23 +243,16 @@ public class AiReviewController {
             );
 
 
-            // ==================================
             // ENCODE REPOSITORY URL
-            // ==================================
 
             String encodedRepoUrl =
                     URLEncoder.encode(
-
                             repoUrl,
-
                             StandardCharsets.UTF_8
-
                     );
 
 
-            // ==================================
             // CREATE FASTAPI URL
-            // ==================================
 
             String requestUrl =
                     AI_SERVICE_URL
@@ -319,9 +270,7 @@ public class AiReviewController {
             );
 
 
-            // ==================================
             // CREATE HTTP REQUEST
-            // ==================================
 
             HttpRequest httpRequest =
                     HttpRequest.newBuilder()
@@ -346,9 +295,7 @@ public class AiReviewController {
                             .build();
 
 
-            // ==================================
             // CALL FASTAPI
-            // ==================================
 
             HttpResponse<String> response =
                     httpClient.send(
@@ -376,12 +323,9 @@ public class AiReviewController {
             );
 
 
-            // ==================================
             // HANDLE AI SERVICE ERROR
-            // ==================================
 
             if (statusCode >= 400) {
-
 
                 System.out.println(
                         "AI Service Error:"
@@ -397,20 +341,14 @@ public class AiReviewController {
 
 
                 errorResponse.put(
-
                         "error",
-
                         "AI service failed to analyze the repository."
-
                 );
 
 
                 errorResponse.put(
-
                         "details",
-
                         responseBody
-
                 );
 
 
@@ -426,9 +364,7 @@ public class AiReviewController {
             }
 
 
-            // ==================================
             // PARSE FASTAPI RESPONSE
-            // ==================================
 
             Map<String, Object> aiResponse =
                     objectMapper.readValue(
@@ -443,9 +379,7 @@ public class AiReviewController {
                     );
 
 
-            // ==================================
             // GET REVIEW TEXT
-            // ==================================
 
             Object reviewObject =
                     aiResponse.get(
@@ -486,9 +420,7 @@ public class AiReviewController {
             }
 
 
-            // ==================================
             // GET FILES
-            // ==================================
 
             List<String> files = null;
 
@@ -529,9 +461,7 @@ public class AiReviewController {
             }
 
 
-            // ==================================
             // GET CHUNK COUNT
-            // ==================================
 
             int chunkCount =
                     getChunkCount(
@@ -539,30 +469,28 @@ public class AiReviewController {
                     );
 
 
-                // ==================================
-                // GET OR CREATE REPOSITORY
-                // ==================================
+            // GET OR CREATE REPOSITORY
 
-                Repository savedRepository =
-                        repositoryService
-                                .getOrCreateRepository(
+            Repository savedRepository =
+                    repositoryService
+                            .getOrCreateRepository(
 
-                                        user.getId(),
+                                    user.getId(),
 
-                                        repoUrl,
+                                    repoUrl,
 
-                                        repoName
+                                    repoName
 
-                                );
+                            );
 
 
-                System.out.println(
-                        "Using Repository ID: "
-                                + savedRepository.getId()
-                );
-            // ==================================
+            System.out.println(
+                    "Using Repository ID: "
+                            + savedRepository.getId()
+            );
+
+
             // SAVE REVIEW
-            // ==================================
 
             Review review =
                     new Review();
@@ -591,61 +519,42 @@ public class AiReviewController {
             );
 
 
-            // ==================================
             // ADD DATABASE INFORMATION
-            // ==================================
 
             aiResponse.put(
-
                     "repository_id",
-
                     savedRepository.getId()
-
             );
 
 
             aiResponse.put(
-
                     "review_id",
-
                     savedReview.getId()
-
             );
 
 
             aiResponse.put(
-
                     "repo_name",
-
                     repoName
-
             );
 
 
             if (files != null) {
 
                 aiResponse.put(
-
                         "files",
-
                         files
-
                 );
             }
 
 
             aiResponse.put(
-
                     "chunk_count",
-
                     chunkCount
-
             );
 
 
-            // ==================================
             // DEBUG
-            // ==================================
 
             System.out.println(
                     "AI review completed successfully."
@@ -674,35 +583,21 @@ public class AiReviewController {
             );
 
 
-            // ==================================
             // RETURN TO FRONTEND
-            // ==================================
 
             return ResponseEntity.ok(
                     aiResponse
             );
 
-
         }
 
 
-        // ======================================
         // ERROR HANDLING
-        // ======================================
 
         catch (Exception error) {
 
-
-            System.out.println(
-                    "\n================================="
-            );
-
             System.out.println(
                     "AI REVIEW ERROR"
-            );
-
-            System.out.println(
-                    "================================="
             );
 
 
@@ -714,20 +609,14 @@ public class AiReviewController {
 
 
             errorResponse.put(
-
                     "error",
-
                     "Unable to analyze repository."
-
             );
 
 
             errorResponse.put(
-
                     "details",
-
                     error.getMessage()
-
             );
 
 
@@ -744,14 +633,11 @@ public class AiReviewController {
     }
 
 
-    // ==========================================
     // EXTRACT REPOSITORY NAME
-    // ==========================================
 
     private String extractRepositoryName(
             String repoUrl
     ) {
-
 
         String cleanUrl =
                 repoUrl
@@ -789,14 +675,11 @@ public class AiReviewController {
     }
 
 
-    // ==========================================
     // GET CHUNK COUNT
-    // ==========================================
 
     private int getChunkCount(
             Map<String, Object> aiResponse
     ) {
-
 
         Object chunkObject =
                 aiResponse.get(
@@ -827,9 +710,7 @@ public class AiReviewController {
             try {
 
                 return Integer.parseInt(
-
                         chunkObject.toString()
-
                 );
 
             }
@@ -845,25 +726,19 @@ public class AiReviewController {
     }
 
 
-    // ==========================================
     // CREATE ERROR RESPONSE
-    // ==========================================
 
     private Map<String, String> createError(
             String message
     ) {
-
 
         Map<String, String> error =
                 new HashMap<>();
 
 
         error.put(
-
                 "error",
-
                 message
-
         );
 
 

@@ -28,25 +28,20 @@ public class LoginController {
             PasswordEncoder passwordEncoder,
             JwtService jwtService
     ) {
-
         this.userService = userService;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
     }
 
 
-    // ==========================================
     // LOGIN
-    // ==========================================
 
     @PostMapping("/login")
     public ResponseEntity<?> login(
             @RequestBody LoginRequest request
     ) {
 
-        // ==========================================
         // FIND USER
-        // ==========================================
 
         User user = userService.findByEmail(
                 request.getEmail().trim()
@@ -65,9 +60,7 @@ public class LoginController {
         }
 
 
-        // ==========================================
         // CHECK PASSWORD
-        // ==========================================
 
         boolean passwordMatches =
                 passwordEncoder.matches(
@@ -88,9 +81,7 @@ public class LoginController {
         }
 
 
-        // ==========================================
         // GENERATE JWT
-        // ==========================================
 
         String token =
                 jwtService.generateToken(
@@ -110,9 +101,7 @@ public class LoginController {
         );
 
 
-        // ==========================================
         // RETURN TOKEN
-        // ==========================================
 
         return ResponseEntity.ok(
                 new LoginResponse(token)
@@ -120,9 +109,7 @@ public class LoginController {
     }
 
 
-    // ==========================================
     // LOGIN RESPONSE
-    // ==========================================
 
     public static class LoginResponse {
 
@@ -130,21 +117,17 @@ public class LoginController {
 
 
         public LoginResponse(String token) {
-
             this.token = token;
         }
 
 
         public String getToken() {
-
             return token;
         }
     }
 
 
-    // ==========================================
     // ERROR RESPONSE
-    // ==========================================
 
     public static class ErrorResponse {
 
@@ -152,13 +135,11 @@ public class LoginController {
 
 
         public ErrorResponse(String error) {
-
             this.error = error;
         }
 
 
         public String getError() {
-
             return error;
         }
     }

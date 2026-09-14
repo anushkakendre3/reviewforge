@@ -60,9 +60,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 );
 
 
-        // ==========================================
         // CHECK AUTHORIZATION HEADER
-        // ==========================================
 
         if (
                 authHeader == null
@@ -78,9 +76,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         }
 
 
-        // ==========================================
         // CLEAN TOKEN
-        // ==========================================
 
         String token =
                 authHeader
@@ -111,9 +107,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         try {
 
-            // ======================================
             // EXTRACT EMAIL FROM JWT
-            // ======================================
 
             String email =
                     jwtService.extractEmail(
@@ -126,9 +120,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             );
 
 
-            // ======================================
             // STORE USER EMAIL IN REQUEST
-            // ======================================
 
             request.setAttribute(
                     "userEmail",
@@ -136,9 +128,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             );
 
 
-            // ======================================
             // CONTINUE REQUEST
-            // ======================================
 
             filterChain.doFilter(
                     request,
@@ -162,9 +152,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     }
 
 
-    // ==========================================
     // SEND UNAUTHORIZED RESPONSE
-    // ==========================================
 
     private void sendUnauthorized(
             HttpServletResponse response,

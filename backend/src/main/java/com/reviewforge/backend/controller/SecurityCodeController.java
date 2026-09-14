@@ -19,36 +19,27 @@ import java.util.Map;
 @RestController
 public class SecurityCodeController {
 
-    // ==========================================
     // SECURITY CODE
-    // ==========================================
 
     private static final String SECURITY_CODE =
             "Vanaja";
 
 
-    // ==========================================
     // JWT SERVICE
-    // ==========================================
 
     private final JwtService jwtService;
 
 
-    // ==========================================
     // CONSTRUCTOR
-    // ==========================================
 
     public SecurityCodeController(
             JwtService jwtService
     ) {
-
         this.jwtService = jwtService;
     }
 
 
-    // ==========================================
     // VERIFY SECURITY CODE
-    // ==========================================
 
     @PostMapping("/verify-security-code")
     public ResponseEntity<?> verifySecurityCode(
@@ -58,15 +49,12 @@ public class SecurityCodeController {
             HttpServletRequest httpRequest
     ) {
 
-
         System.out.println(
                 "SECURITY CODE ENDPOINT REACHED"
         );
 
 
-        // ======================================
         // VALIDATE SECURITY CODE
-        // ======================================
 
         if (
                 request.getSecurityCode() == null
@@ -84,9 +72,7 @@ public class SecurityCodeController {
         }
 
 
-        // ======================================
         // CHECK SECURITY CODE
-        // ======================================
 
         if (
                 !SECURITY_CODE.equals(
@@ -106,9 +92,7 @@ public class SecurityCodeController {
         }
 
 
-        // ======================================
         // GET AUTHORIZATION HEADER
-        // ======================================
 
         String authorizationHeader =
                 httpRequest.getHeader(
@@ -134,9 +118,7 @@ public class SecurityCodeController {
         }
 
 
-        // ======================================
         // EXTRACT TOKEN
-        // ======================================
 
         String token =
                 authorizationHeader.substring(7);
@@ -144,10 +126,7 @@ public class SecurityCodeController {
 
         try {
 
-
-            // ==================================
             // EXTRACT EMAIL FROM OLD TOKEN
-            // ==================================
 
             String email =
                     jwtService.extractEmail(
@@ -155,9 +134,7 @@ public class SecurityCodeController {
                     );
 
 
-            // ==================================
             // GENERATE NEW VERIFIED TOKEN
-            // ==================================
 
             String verifiedToken =
                     jwtService.generateVerifiedToken(
@@ -171,9 +148,7 @@ public class SecurityCodeController {
             );
 
 
-            // ==================================
             // SUCCESS RESPONSE
-            // ==================================
 
             Map<String, Object> response =
                     new HashMap<>();
@@ -201,9 +176,7 @@ public class SecurityCodeController {
                     response
             );
 
-
         } catch (Exception error) {
-
 
             System.out.println(
                     "Security code verification error: "
@@ -222,9 +195,7 @@ public class SecurityCodeController {
     }
 
 
-    // ==========================================
     // CREATE ERROR RESPONSE
-    // ==========================================
 
     private Map<String, Object> createError(
             String message

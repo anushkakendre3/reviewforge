@@ -25,9 +25,7 @@ public class RepositoryService {
     }
 
 
-    // ==========================================
     // CREATE REPOSITORY
-    // ==========================================
 
     public Repository createRepository(
             Repository repository
@@ -49,9 +47,7 @@ public class RepositoryService {
     }
 
 
-    // ==========================================
     // FIND REPOSITORY
-    // ==========================================
 
     public Repository findByUserAndRepoUrl(
 
@@ -75,9 +71,7 @@ public class RepositoryService {
     }
 
 
-    // ==========================================
     // GET OR CREATE REPOSITORY
-    // ==========================================
 
     public Repository getOrCreateRepository(
 
@@ -89,10 +83,7 @@ public class RepositoryService {
 
     ) {
 
-
-        // --------------------------------------
         // CHECK EXISTING REPOSITORY
-        // --------------------------------------
 
         Repository existingRepository =
                 findByUserAndRepoUrl(
@@ -104,9 +95,7 @@ public class RepositoryService {
                 );
 
 
-        // --------------------------------------
         // REPOSITORY EXISTS
-        // --------------------------------------
 
         if (
                 existingRepository != null
@@ -126,9 +115,7 @@ public class RepositoryService {
         }
 
 
-        // --------------------------------------
         // CREATE NEW REPOSITORY
-        // --------------------------------------
 
         Repository newRepository =
                 new Repository();
@@ -174,9 +161,7 @@ public class RepositoryService {
     }
 
 
-    // ==========================================
     // GET USER REPOSITORIES
-    // ==========================================
 
     public List<Repository> getRepositoriesByUser(
             Long userId

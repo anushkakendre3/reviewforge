@@ -3,9 +3,7 @@ from pathlib import Path
 import chromadb
 
 
-# ==========================================
 # CHROMA DATABASE PATH
-# ==========================================
 
 BASE_DIR = (
     Path(__file__)
@@ -20,21 +18,15 @@ CHROMA_PATH = (
 
 CHROMA_PATH.mkdir(
     exist_ok=True
-)
 
 
-# ==========================================
-# CHROMA CLIENT
-# ==========================================
 
 client = chromadb.PersistentClient(
     path=str(CHROMA_PATH)
 )
 
 
-# ==========================================
 # CLEAN COLLECTION NAME
-# ==========================================
 
 def clean_collection_name(repo_name):
 
@@ -87,9 +79,7 @@ def clean_collection_name(repo_name):
     return name
 
 
-# ==========================================
 # GET OR CREATE COLLECTION
-# ==========================================
 
 def get_collection(repo_name):
 
@@ -117,9 +107,7 @@ def get_collection(repo_name):
         )
 
 
-# ==========================================
 # NORMALIZE CHUNK
-# ==========================================
 
 def normalize_chunk(chunk, index=0):
 
@@ -133,9 +121,7 @@ def normalize_chunk(chunk, index=0):
         }
 
 
-    # ======================================
     # CONTENT
-    # ======================================
 
     content = chunk.get(
         "content",
@@ -143,9 +129,7 @@ def normalize_chunk(chunk, index=0):
     )
 
 
-    # ======================================
     # METADATA
-    # ======================================
 
     metadata = chunk.get(
         "metadata",
@@ -158,9 +142,7 @@ def normalize_chunk(chunk, index=0):
         metadata = {}
 
 
-    # ======================================
     # FILE PATH
-    # ======================================
 
     file_path = (
 
@@ -180,9 +162,7 @@ def normalize_chunk(chunk, index=0):
     )
 
 
-    # ======================================
     # LANGUAGE
-    # ======================================
 
     language = (
 
@@ -200,9 +180,7 @@ def normalize_chunk(chunk, index=0):
     )
 
 
-    # ======================================
     # CHUNK INDEX
-    # ======================================
 
     chunk_index = (
 
@@ -234,9 +212,7 @@ def normalize_chunk(chunk, index=0):
     }
 
 
-# ==========================================
 # GET LANGUAGE FROM FILE PATH
-# ==========================================
 
 def get_language_from_path(file_path):
 
@@ -295,9 +271,7 @@ def get_language_from_path(file_path):
     return "Unknown"
 
 
-# ==========================================
 # STORE CODE CHUNKS
-# ==========================================
 
 def store_chunks(
     repo_name,
@@ -318,9 +292,7 @@ def store_chunks(
     )
 
 
-    # ======================================
     # CLEAR OLD DATA
-    # ======================================
 
     try:
 
@@ -354,9 +326,7 @@ def store_chunks(
         )
 
 
-    # ======================================
     # PREPARE DATA
-    # ======================================
 
     documents = []
 
@@ -418,9 +388,7 @@ def store_chunks(
         )
 
 
-    # ======================================
     # NO DOCUMENTS
-    # ======================================
 
     if not documents:
 
@@ -431,9 +399,9 @@ def store_chunks(
         return 0
 
 
-    # ======================================
+
     # STORE IN CHROMADB
-    # ======================================
+
 
     try:
 
@@ -465,9 +433,7 @@ def store_chunks(
         )
 
 
-# ==========================================
 # RETRIEVE RELEVANT CHUNKS
-# ==========================================
 
 def retrieve_relevant_chunks(
     repo_name,
@@ -528,9 +494,7 @@ def retrieve_relevant_chunks(
         retrieved_chunks = []
 
 
-        # ==================================
         # NORMALIZE RETRIEVED DATA
-        # ==================================
 
         for index, document in enumerate(
             documents
@@ -574,7 +538,6 @@ def retrieve_relevant_chunks(
             )
 
 
-            # IMPORTANT:
             # Return the exact format
             # expected by review_service.py
 

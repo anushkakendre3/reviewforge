@@ -20,10 +20,7 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-
-    // ==========================================
     // CREATE USER
-    // ==========================================
 
     public User createUser(User user) {
 
@@ -34,7 +31,6 @@ public class UserService {
             );
         }
 
-
         if (user.getEmail() == null
                 || user.getEmail().isBlank()) {
 
@@ -42,7 +38,6 @@ public class UserService {
                     "Email is required"
             );
         }
-
 
         if (user.getPassword() == null
                 || user.getPassword().isBlank()) {
@@ -52,12 +47,10 @@ public class UserService {
             );
         }
 
-
         String cleanEmail =
                 user.getEmail()
                         .trim()
                         .toLowerCase();
-
 
         if (userRepository
                 .findByEmail(cleanEmail)
@@ -68,11 +61,9 @@ public class UserService {
             );
         }
 
-
         user.setEmail(
                 cleanEmail
         );
-
 
         user.setPassword(
                 passwordEncoder.encode(
@@ -80,16 +71,12 @@ public class UserService {
                 )
         );
 
-
         return userRepository.save(
                 user
         );
     }
 
-
-    // ==========================================
     // FIND USER BY EMAIL
-    // ==========================================
 
     public User findByEmail(
             String email
@@ -100,7 +87,6 @@ public class UserService {
 
             return null;
         }
-
 
         return userRepository
 
@@ -115,10 +101,7 @@ public class UserService {
                 .orElse(null);
     }
 
-
-    // ==========================================
     // GET USER BY ID
-    // ==========================================
 
     public User findById(
             Long id
@@ -128,7 +111,6 @@ public class UserService {
 
             return null;
         }
-
 
         return userRepository
 

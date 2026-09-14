@@ -25,9 +25,7 @@ public class ReviewService {
     }
 
 
-    // ==========================================
     // CREATE REVIEW
-    // ==========================================
 
     public Review createReview(
             Review review
@@ -52,9 +50,7 @@ public class ReviewService {
     }
 
 
-    // ==========================================
     // GET REVIEWS BY REPOSITORY
-    // ==========================================
 
     public List<Review> getReviewsByRepository(
             Long repositoryId

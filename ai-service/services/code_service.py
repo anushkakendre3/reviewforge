@@ -1,9 +1,7 @@
 from pathlib import Path
 
 
-# ==========================================
 # SUPPORTED CODE FILE EXTENSIONS
-# ==========================================
 
 SUPPORTED_EXTENSIONS = {
 
@@ -43,10 +41,8 @@ SUPPORTED_EXTENSIONS = {
 
 }
 
-
-# ==========================================
 # FOLDERS TO IGNORE
-# ==========================================
+
 
 IGNORED_DIRECTORIES = {
 
@@ -75,9 +71,7 @@ IGNORED_DIRECTORIES = {
 }
 
 
-# ==========================================
 # LIMITS
-# ==========================================
 
 MAX_FILE_SIZE = 500000
 
@@ -90,9 +84,7 @@ CHUNK_SIZE = 1500
 CHUNK_OVERLAP = 200
 
 
-# ==========================================
 # CHECK IF DIRECTORY SHOULD BE IGNORED
-# ==========================================
 
 def should_ignore_path(file_path: Path):
 
@@ -105,9 +97,7 @@ def should_ignore_path(file_path: Path):
     return False
 
 
-# ==========================================
 # EXTRACT CODE FILES
-# ==========================================
 
 def extract_code_files(repo_path):
 
@@ -122,9 +112,7 @@ def extract_code_files(repo_path):
 
     for file_path in repo_path.rglob("*"):
 
-        # ----------------------------------
         # LIMIT NUMBER OF FILES
-        # ----------------------------------
 
         if len(code_files) >= MAX_FILES:
 
@@ -135,36 +123,28 @@ def extract_code_files(repo_path):
             break
 
 
-        # ----------------------------------
         # SKIP DIRECTORIES
-        # ----------------------------------
 
         if file_path.is_dir():
 
             continue
 
 
-        # ----------------------------------
         # SKIP IGNORED FOLDERS
-        # ----------------------------------
 
         if should_ignore_path(file_path):
 
             continue
 
 
-        # ----------------------------------
         # CHECK FILE EXTENSION
-        # ----------------------------------
 
         if file_path.suffix.lower() not in SUPPORTED_EXTENSIONS:
 
             continue
 
 
-        # ----------------------------------
         # CHECK FILE SIZE
-        # ----------------------------------
 
         try:
 
@@ -183,9 +163,7 @@ def extract_code_files(repo_path):
             continue
 
 
-        # ----------------------------------
         # READ FILE
-        # ----------------------------------
 
         try:
 
@@ -232,9 +210,7 @@ def extract_code_files(repo_path):
     return code_files
 
 
-# ==========================================
 # CHUNK SINGLE TEXT
-# ==========================================
 
 def chunk_text(
 
@@ -290,9 +266,7 @@ def chunk_text(
     return chunks
 
 
-# ==========================================
 # CHUNK CODE FILES
-# ==========================================
 
 def chunk_code_files(code_files):
 
@@ -328,9 +302,7 @@ def chunk_code_files(code_files):
         )
 
 
-        # ----------------------------------
         # LIMIT CHUNKS PER FILE
-        # ----------------------------------
 
         file_chunks = file_chunks[
             :MAX_CHUNKS_PER_FILE

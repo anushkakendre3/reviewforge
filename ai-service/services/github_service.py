@@ -5,9 +5,7 @@ from pathlib import Path
 from git import Repo
 
 
-# ==========================================
 # REPOSITORIES FOLDER
-# ==========================================
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -18,9 +16,7 @@ REPOSITORIES_DIR.mkdir(
 )
 
 
-# ==========================================
 # VALIDATE GITHUB URL
-# ==========================================
 
 def validate_github_url(repo_url: str):
 
@@ -41,9 +37,7 @@ def validate_github_url(repo_url: str):
     return repo_url
 
 
-# ==========================================
 # GET REPOSITORY NAME
-# ==========================================
 
 def get_repository_name(repo_url: str):
 
@@ -60,9 +54,7 @@ def get_repository_name(repo_url: str):
     return repo_name
 
 
-# ==========================================
 # CLONE REPOSITORY
-# ==========================================
 
 def clone_repository(repo_url: str):
 
@@ -129,9 +121,7 @@ def clone_repository(repo_url: str):
         )
 
 
-# ==========================================
 # DELETE REPOSITORY
-# ==========================================
 
 def delete_repository(repo_path):
 

@@ -11,20 +11,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
-
 @RestController
 public class AccessCodeController {
 
     private final JwtService jwtService;
 
-
-    // ==========================================
     // SECURITY CODE
-    // ==========================================
 
     private static final String ACCESS_CODE =
             "RF-ACCESS-2026";
-
 
     public AccessCodeController(
             JwtService jwtService
@@ -33,10 +28,7 @@ public class AccessCodeController {
         this.jwtService = jwtService;
     }
 
-
-    // ==========================================
     // VERIFY ACCESS CODE
-    // ==========================================
 
     @PostMapping("/access/verify")
     public ResponseEntity<?> verifyAccessCode(
@@ -53,9 +45,7 @@ public class AccessCodeController {
 
         try {
 
-            // ==================================
             // CHECK JWT EXISTS
-            // ==================================
 
             if (
                     authorizationHeader == null
@@ -71,26 +61,19 @@ public class AccessCodeController {
                         );
             }
 
-
-            // ==================================
             // EXTRACT USER EMAIL
-            // ==================================
 
             String email =
                     jwtService.extractEmail(
                             authorizationHeader
                     );
 
-
-            // ==================================
             // CHECK ALREADY VERIFIED
-            // ==================================
 
             boolean alreadyVerified =
                     jwtService.isAccessVerified(
                             authorizationHeader
                     );
-
 
             if (alreadyVerified) {
 
@@ -108,10 +91,7 @@ public class AccessCodeController {
                 );
             }
 
-
-            // ==================================
             // CHECK REQUEST
-            // ==================================
 
             if (
                     request == null
@@ -128,16 +108,12 @@ public class AccessCodeController {
                         );
             }
 
-
-            // ==================================
             // VERIFY SECURITY CODE
-            // ==================================
 
             boolean validCode =
                     ACCESS_CODE.equals(
                             request.getCode().trim()
                     );
-
 
             if (!validCode) {
 
@@ -150,26 +126,19 @@ public class AccessCodeController {
                         );
             }
 
-
-            // ==================================
             // GENERATE VERIFIED JWT
-            // ==================================
 
             String verifiedToken =
                     jwtService.generateVerifiedToken(
                             email
                     );
 
-
             System.out.println(
                     "Security code verified for: "
                             + email
             );
 
-
-            // ==================================
             // RETURN VERIFIED TOKEN
-            // ==================================
 
             return ResponseEntity.ok(
                     new AccessCodeResponse(
@@ -179,7 +148,6 @@ public class AccessCodeController {
                             verifiedToken
                     )
             );
-
 
         } catch (Exception error) {
 
@@ -193,17 +161,13 @@ public class AccessCodeController {
         }
     }
 
-
-    // ==========================================
     // SUCCESS RESPONSE
-    // ==========================================
 
     public static class AccessCodeResponse {
 
         private String message;
 
         private String token;
-
 
         public AccessCodeResponse(
                 String message,
@@ -215,12 +179,10 @@ public class AccessCodeController {
             this.token = token;
         }
 
-
         public String getMessage() {
 
             return message;
         }
-
 
         public String getToken() {
 
@@ -228,15 +190,11 @@ public class AccessCodeController {
         }
     }
 
-
-    // ==========================================
     // ERROR RESPONSE
-    // ==========================================
 
     public static class ErrorResponse {
 
         private String error;
-
 
         public ErrorResponse(
                 String error
@@ -244,7 +202,6 @@ public class AccessCodeController {
 
             this.error = error;
         }
-
 
         public String getError() {
 

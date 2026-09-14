@@ -1,6 +1,5 @@
 package com.reviewforge.backend.controller;
 
-
 import com.reviewforge.backend.entity.Repository;
 import com.reviewforge.backend.entity.Review;
 import com.reviewforge.backend.entity.User;
@@ -27,89 +26,54 @@ import java.util.Map;
 @RequestMapping("/api")
 public class ReviewHistoryController {
 
-
-    // ==========================================
     // SERVICES
-    // ==========================================
 
     private final JwtService jwtService;
-
     private final UserService userService;
-
     private final RepositoryService repositoryService;
-
     private final ReviewService reviewService;
 
 
-    // ==========================================
     // CONSTRUCTOR
-    // ==========================================
 
     public ReviewHistoryController(
-
             JwtService jwtService,
-
             UserService userService,
-
             RepositoryService repositoryService,
-
             ReviewService reviewService
-
     ) {
-
-        this.jwtService =
-                jwtService;
-
-        this.userService =
-                userService;
-
-        this.repositoryService =
-                repositoryService;
-
-        this.reviewService =
-                reviewService;
+        this.jwtService = jwtService;
+        this.userService = userService;
+        this.repositoryService = repositoryService;
+        this.reviewService = reviewService;
     }
 
 
-    // ==========================================
     // GET REVIEW HISTORY
-    // ==========================================
 
     @GetMapping("/history")
     public ResponseEntity<?> getReviewHistory(
-
-            @RequestHeader("Authorization")
-            String authHeader
-
+            @RequestHeader("Authorization") String authHeader
     ) {
-
 
         try {
 
-
-            // ==================================
             // CLEAN TOKEN
-            // ==================================
 
             String token =
                     authHeader
-
                             .replaceFirst(
                                     "(?i)^Bearer\\s+",
                                     ""
                             )
-
                             .replaceAll(
                                     "\\s+",
                                     ""
                             )
-
                             .trim();
 
 
-            // ==================================
             // GET EMAIL FROM JWT
-            // ==================================
 
             String email =
                     jwtService.extractEmail(
@@ -117,9 +81,7 @@ public class ReviewHistoryController {
                     );
 
 
-            // ==================================
             // FIND USER
-            // ==================================
 
             User user =
                     userService.findByEmail(
@@ -127,9 +89,7 @@ public class ReviewHistoryController {
                     );
 
 
-            if (
-                    user == null
-            ) {
+            if (user == null) {
 
                 return ResponseEntity
                         .status(401)
@@ -141,9 +101,7 @@ public class ReviewHistoryController {
             }
 
 
-            // ==================================
             // GET USER REPOSITORIES
-            // ==================================
 
             List<Repository> repositories =
                     repositoryService
@@ -152,72 +110,45 @@ public class ReviewHistoryController {
                             );
 
 
-            // ==================================
             // HISTORY RESPONSE
-            // ==================================
 
-            List<Map<String, Object>>
-                    history =
+            List<Map<String, Object>> history =
                     new ArrayList<>();
 
 
-            // ==================================
             // PROCESS EACH REPOSITORY
-            // ==================================
 
-            for (
+            for (Repository repository : repositories) {
 
-                    Repository repository
-                    :
-                    repositories
-
-            ) {
-
-
-                Map<String, Object>
-                        repositoryData =
+                Map<String, Object> repositoryData =
                         new HashMap<>();
 
 
                 repositoryData.put(
-
                         "repositoryId",
-
                         repository.getId()
-
                 );
 
 
                 repositoryData.put(
-
                         "repositoryName",
-
                         repository.getRepoName()
-
                 );
 
 
                 repositoryData.put(
-
                         "repositoryUrl",
-
                         repository.getRepoUrl()
-
                 );
 
 
                 repositoryData.put(
-
                         "createdAt",
-
                         repository.getCreatedAt()
-
                 );
 
 
-                // ==============================
                 // GET REVIEWS
-                // ==============================
 
                 List<Review> reviews =
                         reviewService
@@ -226,53 +157,33 @@ public class ReviewHistoryController {
                                 );
 
 
-                List<Map<String, Object>>
-                        reviewList =
+                List<Map<String, Object>> reviewList =
                         new ArrayList<>();
 
 
-                // ==============================
                 // PROCESS REVIEWS
-                // ==============================
 
-                for (
+                for (Review review : reviews) {
 
-                        Review review
-                        :
-                        reviews
-
-                ) {
-
-
-                    Map<String, Object>
-                            reviewData =
+                    Map<String, Object> reviewData =
                             new HashMap<>();
 
 
                     reviewData.put(
-
                             "reviewId",
-
                             review.getId()
-
                     );
 
 
                     reviewData.put(
-
                             "reviewText",
-
                             review.getReviewText()
-
                     );
 
 
                     reviewData.put(
-
                             "createdAt",
-
                             review.getCreatedAt()
-
                     );
 
 
@@ -282,22 +193,15 @@ public class ReviewHistoryController {
                 }
 
 
-                // ==============================
                 // ADD REVIEWS
-                // ==============================
 
                 repositoryData.put(
-
                         "reviews",
-
                         reviewList
-
                 );
 
 
-                // ==============================
                 // ADD REPOSITORY
-                // ==============================
 
                 history.add(
                         repositoryData
@@ -305,24 +209,15 @@ public class ReviewHistoryController {
             }
 
 
-            // ==================================
             // RETURN HISTORY
-            // ==================================
 
             return ResponseEntity.ok(
                     history
             );
 
-
-        }
-
-        catch (
-                Exception error
-        ) {
-
+        } catch (Exception error) {
 
             error.printStackTrace();
-
 
             return ResponseEntity
                     .status(500)
@@ -335,18 +230,13 @@ public class ReviewHistoryController {
     }
 
 
-    // ==========================================
     // CREATE ERROR RESPONSE
-    // ==========================================
 
-    private Map<String, String>
-    createError(
+    private Map<String, String> createError(
             String message
     ) {
 
-
-        Map<String, String>
-                error =
+        Map<String, String> error =
                 new HashMap<>();
 
 

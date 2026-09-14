@@ -38,9 +38,7 @@ public class ReviewController {
     }
 
 
-    // ==========================================
     // REVIEW GITHUB REPOSITORY
-    // ==========================================
 
     @PostMapping("/review")
     public ResponseEntity<?> reviewRepository(
@@ -52,9 +50,7 @@ public class ReviewController {
     ) {
 
 
-        // ======================================
         // CHECK AUTHENTICATION
-        // ======================================
 
         if (authentication == null) {
 
@@ -67,12 +63,8 @@ public class ReviewController {
                             )
                     );
 
-        }
 
 
-        // ======================================
-        // CHECK REQUEST
-        // ======================================
 
         if (request == null) {
 
@@ -88,9 +80,7 @@ public class ReviewController {
         }
 
 
-        // ======================================
         // GET REPOSITORY URL
-        // ======================================
 
         String repoUrl =
                 request.getRepoUrl();
@@ -117,9 +107,7 @@ public class ReviewController {
         repoUrl = repoUrl.trim();
 
 
-        // ======================================
         // VALIDATE GITHUB URL
-        // ======================================
 
         if (
                 !repoUrl.startsWith(
@@ -142,9 +130,7 @@ public class ReviewController {
         try {
 
 
-            // ==================================
             // BUILD FASTAPI URL
-            // ==================================
 
             String aiServiceUrl =
 
@@ -181,18 +167,14 @@ public class ReviewController {
                     );
 
 
-            // ==================================
             // GET AI DATA
-            // ==================================
 
             Map<String, Object> aiData =
 
                     aiResponse.getBody();
 
 
-            // ==================================
             // CHECK AI RESPONSE
-            // ==================================
 
             if (aiData == null) {
 
@@ -217,18 +199,14 @@ public class ReviewController {
             }
 
 
-            // ==================================
             // CREATE CLEAN RESPONSE
-            // ==================================
 
             Map<String, Object> response =
 
                     new HashMap<>();
 
 
-            // ==================================
             // STATUS
-            // ==================================
 
             response.put(
 
@@ -245,9 +223,7 @@ public class ReviewController {
             );
 
 
-            // ==================================
             // REPOSITORY NAME
-            // ==================================
 
             response.put(
 
@@ -264,9 +240,7 @@ public class ReviewController {
             );
 
 
-            // ==================================
             // FILES
-            // ==================================
 
             response.put(
 
@@ -283,9 +257,7 @@ public class ReviewController {
             );
 
 
-            // ==================================
             // FILES ANALYZED
-            // ==================================
 
             response.put(
 
@@ -302,9 +274,7 @@ public class ReviewController {
             );
 
 
-            // ==================================
             // TOTAL CHUNKS
-            // ==================================
 
             response.put(
 
@@ -321,9 +291,7 @@ public class ReviewController {
             );
 
 
-            // ==================================
             // RETRIEVED CHUNKS
-            // ==================================
 
             response.put(
 
@@ -340,9 +308,7 @@ public class ReviewController {
             );
 
 
-            // ==================================
             // REVIEW TEXT
-            // ==================================
 
             response.put(
 
@@ -359,9 +325,7 @@ public class ReviewController {
             );
 
 
-            // ==================================
             // AI STATUS
-            // ==================================
 
             response.put(
 
@@ -378,9 +342,7 @@ public class ReviewController {
             );
 
 
-            // ==================================
             // REVIEW ENGINE
-            // ==================================
 
             response.put(
 
@@ -397,9 +359,7 @@ public class ReviewController {
             );
 
 
-            // ==================================
             // ANALYSIS TYPE
-            // ==================================
 
             response.put(
 
@@ -416,9 +376,7 @@ public class ReviewController {
             );
 
 
-            // ==================================
             // SUCCESS MESSAGE
-            // ==================================
 
             response.put(
 
@@ -437,9 +395,7 @@ public class ReviewController {
         }
 
 
-        // ======================================
         // ERROR
-        // ======================================
 
         catch (Exception error) {
 

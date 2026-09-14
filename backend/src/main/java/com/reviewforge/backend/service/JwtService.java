@@ -11,29 +11,20 @@ import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
-
 @Service
 public class JwtService {
 
-    // ==========================================
     // JWT SECRET KEY
-    // ==========================================
 
     private static final String SECRET_KEY =
             "reviewforge-secret-key-for-jwt-token-generation-123456";
 
-
-    // ==========================================
     // TOKEN EXPIRATION
-    // ==========================================
 
     private static final long EXPIRATION_TIME =
             1000 * 60 * 60;
 
-
-    // ==========================================
     // GET SIGNING KEY
-    // ==========================================
 
     private SecretKey getSigningKey() {
 
@@ -44,11 +35,8 @@ public class JwtService {
         );
     }
 
-
-    // ==========================================
     // GENERATE LOGIN TOKEN
     // SECURITY CODE NOT VERIFIED
-    // ==========================================
 
     public String generateToken(
             String email
@@ -83,11 +71,8 @@ public class JwtService {
                 .compact();
     }
 
-
-    // ==========================================
     // GENERATE VERIFIED TOKEN
     // SECURITY CODE VERIFIED
-    // ==========================================
 
     public String generateVerifiedToken(
             String email
@@ -122,10 +107,7 @@ public class JwtService {
                 .compact();
     }
 
-
-    // ==========================================
     // EXTRACT ALL CLAIMS
-    // ==========================================
 
     private Claims extractClaims(
             String token
@@ -141,7 +123,6 @@ public class JwtService {
             );
         }
 
-
         String cleanToken = token
 
                 .replaceFirst(
@@ -155,7 +136,6 @@ public class JwtService {
                 )
 
                 .trim();
-
 
         return Jwts.parser()
 
@@ -172,10 +152,7 @@ public class JwtService {
                 .getPayload();
     }
 
-
-    // ==========================================
     // EXTRACT EMAIL
-    // ==========================================
 
     public String extractEmail(
             String token
@@ -188,10 +165,7 @@ public class JwtService {
         return claims.getSubject();
     }
 
-
-    // ==========================================
     // CHECK SECURITY CODE VERIFICATION
-    // ==========================================
 
     public boolean isAccessVerified(
             String token
