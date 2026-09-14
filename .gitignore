@@ -1,0 +1,55 @@
+# =========================
+# Environment variables
+# =========================
+.env
+.env.*
+!.env.example
+
+# =========================
+# Frontend - Node
+# =========================
+frontend/node_modules/
+frontend/dist/
+
+# =========================
+# Backend - Java / Spring Boot
+# =========================
+backend/target/
+backend/.mvn/
+*.class
+*.jar
+*.war
+
+# =========================
+# Python
+# =========================
+ai-service/venv/
+ai-service/.venv/
+ai-service/__pycache__/
+**/__pycache__/
+*.pyc
+*.pyo
+
+# =========================
+# AI Service generated data
+# =========================
+ai-service/chroma_db/
+ai-service/repositories/
+
+# =========================
+# IDE
+# =========================
+.vscode/
+.idea/
+*.iml
+
+# =========================
+# OS files
+# =========================
+.DS_Store
+Thumbs.db
+
+# =========================
+# Logs
+# =========================
+*.log
