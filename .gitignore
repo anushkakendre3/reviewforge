@@ -15,9 +15,7 @@ frontend/dist/
 # Backend - Java / Spring Boot
 # =========================
 backend/target/
-backend/.mvn/
 *.class
-*.jar
 *.war
 
 # =========================
